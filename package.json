@@ -1,0 +1,19 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "start": "mix watch",
+        "build": "vite build",
+        "development": "mix",
+        "watch": "npm run start"
+    },
+    "devDependencies": {
+        "axios": "^1.1.2",
+        "browser-sync": "^2.29.3",
+        "laravel-mix": "^6.0.49",
+        "laravel-vite-plugin": "^0.7.5",
+        "vite": "^4.0.0",
+        "webpack": "^5.88.1",
+        "webpack-cli": "^4.10.0"
+    }
+}
