@@ -25,9 +25,24 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users',        'App\Http\Controllers\UserController@index');
     Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 
-    Route::get('/cuentas/addCuenta',        'App\Http\Controllers\CuentasController@addCuenta');
+    //Cuentas
+    Route::post('/cuentas/addCuenta',        'App\Http\Controllers\CuentasController@addCuenta');
+    Route::put('/cuentas/updateCuenta',        'App\Http\Controllers\CuentasController@updateCuenta');
+    Route::delete('/cuentas/deleteCuenta',        'App\Http\Controllers\CuentasController@deleteCuenta');
+
+    //Personas
+    Route::post('/personas/addPersona',        'App\Http\Controllers\PersonasController@addPersona');
+    Route::put('/personas/updatePersona',        'App\Http\Controllers\PersonasController@updatePersona');
+    Route::delete('/personas/deletePersona',        'App\Http\Controllers\PersonasController@deletePersona');
+
+    //Bancos
+    Route::post('/bancos/addBanco',        'App\Http\Controllers\BancosController@addBanco');
+    Route::put('/bancos/updateBanco',        'App\Http\Controllers\BancosController@updateBanco');
+    Route::delete('/bancos/deleteBanco',        'App\Http\Controllers\BancosController@deleteBanco');
+
 
 });
+
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/countries',        'App\Http\Controllers\CountriesController@index');
 /* Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

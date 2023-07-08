@@ -3,17 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Cuentas;
+use App\Models\Personas;
 use Illuminate\Support\Facades\Validator;
 
-class CuentasController extends Controller
+class PersonasController extends Controller
 {
-
-    public function addCuenta(Request $request)
+    public function addPersona(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string',
-            'id_user' => 'required|integer',
+            'id_cuenta' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
@@ -21,23 +20,24 @@ class CuentasController extends Controller
         }
 
         try {
-            $cuenta = Cuentas::create([
+            $persona = Personas::create([
                 'name' => $request->input('name'),
-                'id_user' => $request->input('id_user'),
+                'id_cuenta' => $request->input('id_cuenta'),
             ]);
 
-            return response()->json(['message' => 'Cuenta registrada correctamente', 'cuenta' => $cuenta], 201);
+            return response()->json(['message' => 'Persona registrada correctamente', 'persona' => $persona], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
+            //, 'error_message' => $e->getMessage()
             return response()->json(['error' => 'Error al crear el registro'], 500);
         }
     }
 
-    public function updateCuenta(Request $request)
+    public function updatePersona(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_cuenta' => 'required|integer',
+            'id_persona' => 'required|integer',
             'name' => 'required|string',
         ]);
 
@@ -46,16 +46,16 @@ class CuentasController extends Controller
         }
 
         try {
-            $cuenta = Cuentas::find($request->input('id_cuenta'));
+            $persona = Personas::find($request->input('id_persona'));
 
-            if (!$cuenta) {
-                return response()->json(['error' => 'La cuenta no fue encontrada'], 404);
+            if (!$persona) {
+                return response()->json(['error' => 'La persona no fue encontrada'], 404);
             }
 
-            $cuenta->name = $request->input('name');
-            $cuenta->save();
+            $persona->name = $request->input('name');
+            $persona->save();
 
-            return response()->json(['message' => 'Cuenta actualizada correctamente', 'cuenta' => $cuenta], 201);
+            return response()->json(['message' => 'Persona actualizada correctamente', 'persona' => $persona], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -63,10 +63,10 @@ class CuentasController extends Controller
         }
     }
 
-    public function deleteCuenta(Request $request)
+    public function deletePersona(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_cuenta' => 'required|integer',
+            'id_persona' => 'required|integer',
         ]);
     
         if ($validator->fails()) {
@@ -74,15 +74,15 @@ class CuentasController extends Controller
         }
     
         try {
-            $cuenta = Cuentas::find($request->input('id_cuenta'));
+            $persona = Personas::find($request->input('id_persona'));
     
-            if (!$cuenta) {
-                return response()->json(['error' => 'La cuenta no fue encontrada'], 404);
+            if (!$persona) {
+                return response()->json(['error' => 'La persona no fue encontrada'], 404);
             }
     
-            $cuenta->delete();
+            $persona->delete();
 
-            return response()->json(['message' => 'Cuenta eliminada correctamente'], 201);
+            return response()->json(['message' => 'Persona eliminada correctamente'], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

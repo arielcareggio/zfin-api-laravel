@@ -19,8 +19,8 @@ return new class extends Migration
             $table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
-            $table->foreign('id_cuenta')->references('id')->on('cuentas');
-            $table->foreign('id_tipo')->references('id')->on('tipos');
+            $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
+            $table->foreign('id_tipo')->references('id')->on('tipos')->onDelete('cascade');
         });
     }
 

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
-            $table->foreign('id_banco')->references('id')->on('bancos');
+            $table->foreign('id_banco')->references('id')->on('bancos')->onDelete('cascade');
         });
     }
 

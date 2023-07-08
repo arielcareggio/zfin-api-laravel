@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -33,6 +34,10 @@ class Handler extends ExceptionHandler
 {
     if ($exception instanceof UnauthorizedHttpException) {
         return response()->json(['error' => 'Acceso no autorizado'], 401);
+    }
+
+    if ($exception instanceof MethodNotAllowedHttpException) {
+        return response()->json(['error' => 'El método HTTP no está permitido para esta ruta.'], 405);
     }
 
     return parent::render($request, $exception);
