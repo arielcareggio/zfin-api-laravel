@@ -71,7 +71,7 @@ class BancosController extends Controller
     public function deleteBanco(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'id_persona' => 'required|integer',
+            'id_banco' => 'required|integer',
         ]);
     
         if ($validator->fails()) {
@@ -79,15 +79,15 @@ class BancosController extends Controller
         }
     
         try {
-            $persona = Bancos::find($request->input('id_persona'));
+            $banco = Bancos::find($request->input('id_banco'));
     
-            if (!$persona) {
-                return response()->json(['error' => 'La persona no fue encontrada'], 404);
+            if (!$banco) {
+                return response()->json(['error' => 'El banco no fue encontrado'], 404);
             }
     
-            $persona->delete();
+            $banco->delete();
 
-            return response()->json(['message' => 'Persona eliminada correctamente'], 201);
+            return response()->json(['message' => 'Banco eliminado correctamente'], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

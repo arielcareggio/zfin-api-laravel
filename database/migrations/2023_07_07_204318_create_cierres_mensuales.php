@@ -15,15 +15,15 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cuenta');
             $table->unsignedBigInteger('id_banco_cuenta');
-            $table->unsignedBigInteger('id_persona');
+            //$table->unsignedBigInteger('id_persona');
             $table->float('total');
             $table->date('fecha');
-            $table->boolean('eliminado')->default(false);
+            //$table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
             $table->foreign('id_banco_cuenta')->references('id')->on('bancos_cuentas')->onDelete('cascade');
-            $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
+            //$table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
         });
     }
 

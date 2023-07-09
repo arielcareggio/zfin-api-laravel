@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Personas extends Model
+class MovimientosTipos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_cuenta', 'name'];
+    protected $fillable = ['id_cuenta', 'id_tipo', 'name'];
 
     protected $primaryKey = 'id';
 
-    protected $table = 'personas';
+    protected $table = 'movimientos_tipos';
 
     /**
      * Para la eliminación en cascada.
@@ -25,4 +25,5 @@ class Personas extends Model
     {
         return $this->belongsTo(Cuentas::class, 'id_cuenta');
     }
+
 }

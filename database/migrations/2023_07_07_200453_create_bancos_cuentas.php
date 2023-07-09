@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('id_banco');
             $table->string('name')->nullable(); //Por defecto null
             $table->string('nro_cuenta')->nullable(); //Por defecto null
-            $table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_banco')->references('id')->on('bancos')->onDelete('cascade');

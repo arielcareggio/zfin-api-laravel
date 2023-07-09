@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tipos_movimientos', function (Blueprint $table) {
+        Schema::create('movimientos_tipos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cuenta');
             $table->unsignedBigInteger('id_tipo');
             $table->string('name');
-            $table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tipos_movimientos');
+        Schema::dropIfExists('movimientos_tipos');
     }
 };

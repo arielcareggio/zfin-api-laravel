@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_user');
             $table->string('name');
-            $table->boolean('eliminado')->default(false);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_user')->references('id')->on('users');

@@ -29,7 +29,6 @@ class PersonasController extends Controller
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
-            //, 'error_message' => $e->getMessage()
             return response()->json(['error' => 'Error al crear el registro'], 500);
         }
     }
