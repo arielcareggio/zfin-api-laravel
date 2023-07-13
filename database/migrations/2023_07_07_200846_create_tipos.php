@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('tipos', function (Blueprint $table) {
             $table->id();
-            $table->string('tipos');
+            $table->string('tipos')->limit(7);
         });
 
         DB::table('tipos')->insert([

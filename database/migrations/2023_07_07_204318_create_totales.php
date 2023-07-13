@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personas', function (Blueprint $table) {
+        Schema::create('totales', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cuenta');
-            $table->string('name')->limit(25);
+            $table->unsignedBigInteger('id_banco_cuenta');
+            $table->float('total');
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
+            $table->foreign('id_banco_cuenta')->references('id')->on('bancos_cuentas')->onDelete('cascade');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('personas');
+        Schema::dropIfExists('totales');
     }
 };

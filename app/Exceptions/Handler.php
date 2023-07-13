@@ -6,6 +6,9 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use App\Http\Controllers\LogController;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\JsonResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -31,15 +34,24 @@ class Handler extends ExceptionHandler
     }
 
     public function render($request, Throwable $exception)
-{
-    if ($exception instanceof UnauthorizedHttpException) {
-        return response()->json(['error' => 'Acceso no autorizado'], 401);
-    }
+    {
+        if ($exception instanceof UnauthorizedHttpException) {
+            LogController::addLog('Acceso no autorizado - Posible token invalido', json_encode(['Archivo' => $exception->getFile(), 'Linea' => $exception->getLine(), 'Exception'=> $exception->getMessage()]), $request, 1, 401);
+            return response()->json(['error' => 'Acceso no autorizado'], 401);
+        }
 
-    if ($exception instanceof MethodNotAllowedHttpException) {
-        return response()->json(['error' => 'El método HTTP no está permitido para esta ruta.'], 405);
-    }
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            LogController::addLog('El método HTTP no está permitido para esta ruta.', json_encode(['Archivo' => $exception->getFile(), 'Linea' => $exception->getLine(), 'Exception'=> $exception->getMessage()]), $request, 1, 405);
+            return response()->json(['error' => 'El método HTTP no está permitido para esta ruta.'], 405);
+        }
 
-    return parent::render($request, $exception);
-}
+        //cada vez que ocurra una excepción en la aplicación DONDE no se capture con un try-catch, Laravel capturará la excepción y pasara por el siguiente if, 
+        //donde puedo manejar el error a gusto, como guardar LOGS.
+        if ($exception instanceof \Exception) {
+            LogController::addLog('Error general - Exception NO capturada por Try-Catch', json_encode(['Archivo' => $exception->getFile(), 'Linea' => $exception->getLine(), 'Exception'=> $exception->getMessage()]), $request, 1, 405);
+            return response()->json(['error' => 'Error general'], 405);
+        } 
+
+        return parent::render($request, $exception);
+    }
 }

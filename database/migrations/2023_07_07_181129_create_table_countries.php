@@ -16,10 +16,10 @@ return new class extends Migration
     {
         Schema::create('countries', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('iso2');
-            $table->string('iso3');
-            $table->string('phone_code')->nullable();
+            $table->string('name')->limit(50);
+            $table->string('iso2')->limit(5);
+            $table->string('iso3')->limit(5);
+            $table->string('phone_code')->nullable()->limit(25);
         });
 
         $countries = [

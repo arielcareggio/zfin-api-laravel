@@ -11,19 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cierres_mensuales', function (Blueprint $table) {
+        Schema::create('movimientos_tipos_mas_utilizados', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_cuenta');
-            $table->unsignedBigInteger('id_banco_cuenta');
-            //$table->unsignedBigInteger('id_persona');
-            $table->float('total');
-            $table->date('fecha');
-            //$table->boolean('eliminado')->default(false);
+            $table->unsignedBigInteger('id_movimiento_tipo');
+            $table->integer('cantidad')->default(0);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
-            $table->foreign('id_banco_cuenta')->references('id')->on('bancos_cuentas')->onDelete('cascade');
-            //$table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
+            $table->foreign('id_movimiento_tipo')->references('id')->on('movimientos_tipos')->onDelete('cascade');
         });
     }
 
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cierres_mensuales');
+        Schema::dropIfExists('movimientos_tipos_mas_utilizados');
     }
 };

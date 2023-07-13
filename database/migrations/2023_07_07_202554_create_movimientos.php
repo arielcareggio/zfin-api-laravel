@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('movimientos', function (Blueprint $table) {
             $table->id();
-            //$table->unsignedBigInteger('id_cuenta');
             $table->unsignedBigInteger('id_movimiento_tipo');
             $table->unsignedBigInteger('id_banco_cuenta');
             $table->unsignedBigInteger('id_persona');
@@ -22,10 +21,11 @@ return new class extends Migration
             $table->text('url_archivo')->nullable(); //Por defecto null
             $table->timestamps(); //Crea created_at y updated_at
             
-            //$table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');
             $table->foreign('id_movimiento_tipo')->references('id')->on('movimientos_tipos')->onDelete('cascade');
             $table->foreign('id_banco_cuenta')->references('id')->on('bancos_cuentas')->onDelete('cascade');
             $table->foreign('id_persona')->references('id')->on('personas')->onDelete('cascade');
+
+            $table->index('id_banco_cuenta'); // Crear índice en el campo id_banco_cuenta
         });
     }
 

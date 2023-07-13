@@ -11,11 +11,12 @@ class MovimientosController extends Controller
     public function addMovimiento(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            //'id_tipo' => 'required|integer',
             'id_movimiento_tipo' => 'required|integer',
             'id_banco_cuenta' => 'required|integer',
             'id_persona' => 'required|integer',
             'fecha' => 'required|date',
-            'monto' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
+            'monto' => 'required|numeric|regex:/^-?\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
             'url_archivo' => 'nullable|string', //opcional
         ]);
 
@@ -23,8 +24,10 @@ class MovimientosController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
+        //throw new \Exception('División por cero no permitida');
         try {
             $movimiento = Movimientos::create([
+               // 'id_tipo' => $request->input('id_tipo'),
                 'id_movimiento_tipo' => $request->input('id_movimiento_tipo'),
                 'id_banco_cuenta' => $request->input('id_banco_cuenta'),
                 'id_persona' => $request->input('id_persona'),
@@ -33,7 +36,15 @@ class MovimientosController extends Controller
                 'url_archivo' => $request->input('url_archivo'),
             ]);
 
-            return response()->json(['message' => 'Movimiento registrado correctamente', 'movimiento' => $movimiento], 201);
+            //Calculo TOTAL parcial
+            $param['id_persona']        = $request->input('id_persona');
+            $param['id_banco_cuenta']   = $request->input('id_banco_cuenta');
+            $param['monto']             = $request->input('monto');
+            $totales = TotalesController::recalcularTotalParcial($param);
+
+            MovimientosMasUtilizadosController::categoriaMasUtilizada($movimiento);
+
+            return response()->json(['message' => 'Movimiento registrado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -45,11 +56,12 @@ class MovimientosController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_movimiento' => 'required|integer',
+            //'id_tipo' => 'required|integer',
             'id_movimiento_tipo' => 'required|integer',
             'id_banco_cuenta' => 'required|integer',
             'id_persona' => 'required|integer',
             'fecha' => 'required|date',
-            'monto' => 'required|numeric|regex:/^\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
+            'monto' => 'required|numeric|regex:/^-?\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
             'url_archivo' => 'nullable|string', //opcional
         ]);
 
@@ -64,8 +76,9 @@ class MovimientosController extends Controller
                 return response()->json(['error' => 'El Movimiento no fue encontrado'], 404);
             }
 
-            $movimiento_anterior = $movimiento;
+            $movimiento_anterior = clone $movimiento;
 
+            //$movimiento->id_tipo = $request->input('id_tipo');
             $movimiento->id_movimiento_tipo = $request->input('id_movimiento_tipo');
             $movimiento->id_banco_cuenta = $request->input('id_banco_cuenta');
             $movimiento->id_persona = $request->input('id_persona');
@@ -74,25 +87,29 @@ class MovimientosController extends Controller
             $movimiento->url_archivo = $request->input('url_archivo');
             $movimiento->save();
 
-            //hacer validaciones
+            // Para un movimiento no es posible modificar la cuenta, ya que las cuentas bancarias no estarían en la otra cuenta, ya que cada cuenta tiene sus propias cuentas bancarias
 
-            // id_movimiento_tipo_actual = id_movimiento_tipo_nuevo
-            // id_banco_cuenta_actual = id_banco_cuenta_nuevo
-            // id_persona_actual = id_persona_nueva
-            // fecha_actual = fecha_nueva
-            // monto_actual = monto_nueva
-            if($movimiento_anterior->id_movimiento_tipo != $request->input('id_movimiento_tipo') ||
-                $movimiento_anterior->id_banco_cuenta != $request->input('id_banco_cuenta') ||
-                $movimiento_anterior->id_persona != $request->input('id_persona') ||
-                $movimiento_anterior->fecha != $request->input('fecha') ||
-                $movimiento_anterior->monto != $request->input('monto')){
-                    //uno es distinto
-                    
+            //Con el id_persona -> obtengo -> id_cuenta
+            $totales = null;
+
+            if($movimiento_anterior->monto != $request->input('monto') || 
+                $movimiento_anterior->id_movimiento_tipo != $request->input('id_movimiento_tipo') ||
+                $movimiento_anterior->id_banco_cuenta != $request->input('id_banco_cuenta')){
+                //uno es distinto - CALCULO COMPLETO
+                $param['id_persona']        = $request->input('id_persona');
+                $param['id_banco_cuenta']   = $request->input('id_banco_cuenta');
+
+                if($movimiento_anterior->id_banco_cuenta != $request->input('id_banco_cuenta')){
+                    $param['id_banco_cuenta_anterior'] = $movimiento_anterior->id_banco_cuenta;
                 }
+                $totales = TotalesController::recalcularTotal($param);
 
+                if($movimiento_anterior->id_movimiento_tipo != $request->input('id_movimiento_tipo')){
+                    MovimientosMasUtilizadosController::categoriaMasUtilizada($movimiento, $movimiento_anterior);
+                }
+            }
 
-
-            return response()->json(['message' => 'Movimiento actualizado correctamente', 'movimiento' => $movimiento], 201);
+            return response()->json(['message' => 'Movimiento actualizado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 201);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

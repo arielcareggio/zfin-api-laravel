@@ -11,6 +11,7 @@ class MovimientosAccesosDirectosController extends Controller
     public function addMovimientoAccesoDirecto(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'id_tipo' => 'required|integer',
             'id_movimiento_tipo' => 'required|integer',
             'id_banco_cuenta' => 'required|integer',
             'id_persona' => 'required|integer',
@@ -25,6 +26,7 @@ class MovimientosAccesosDirectosController extends Controller
 
         try {
             $accesoDirecto = MovimientosAccesosDirectos::create([
+                'id_tipo' => $request->input('id_tipo'),
                 'id_movimiento_tipo' => $request->input('id_movimiento_tipo'),
                 'id_banco_cuenta' => $request->input('id_banco_cuenta'),
                 'id_persona' => $request->input('id_persona'),
@@ -45,6 +47,7 @@ class MovimientosAccesosDirectosController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'id_movimiento_acceso_directo' => 'required|integer',
+            'id_tipo' => 'required|integer',
             'id_movimiento_tipo' => 'required|integer',
             'id_banco_cuenta' => 'required|integer',
             'id_persona' => 'required|integer',
@@ -64,6 +67,7 @@ class MovimientosAccesosDirectosController extends Controller
                 return response()->json(['error' => 'El Acceso Directo no fue encontrado'], 404);
             }
 
+            $accesoDirecto->id_tipo = $request->input('id_tipo');
             $accesoDirecto->id_movimiento_tipo = $request->input('id_movimiento_tipo');
             $accesoDirecto->id_banco_cuenta = $request->input('id_banco_cuenta');
             $accesoDirecto->id_persona = $request->input('id_persona');

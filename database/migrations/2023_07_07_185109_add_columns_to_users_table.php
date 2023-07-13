@@ -9,7 +9,7 @@ class AddColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('last_name')->after('name')->nullable(); //Agrega la columna 'last_name' después de la columna 'name'.
+            $table->string('last_name')->after('name')->nullable()->limit(255); //Agrega la columna 'last_name' después de la columna 'name'.
             $table->unsignedBigInteger('id_countrie')->after('last_name')->nullable(); // El tipo 'unsignedBigInteger', es un entero sin signo de 64 bits.
             $table->string('phone')->after('id_countrie')->nullable();
 

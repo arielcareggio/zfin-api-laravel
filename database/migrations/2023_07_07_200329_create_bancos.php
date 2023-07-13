@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_cuenta');
             $table->unsignedBigInteger('id_countrie');
-            $table->string('name');
+            $table->string('name')->limit(25);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_cuenta')->references('id')->on('cuentas')->onDelete('cascade');

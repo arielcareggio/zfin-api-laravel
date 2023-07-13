@@ -23,16 +23,16 @@ class Movimientos extends Model
      */
     public function movimientoTipo()
     {
-        return $this->belongsTo(MovimientoTipo::class, 'id_movimiento_tipo');
+        return $this->belongsTo(MovimientosTipos::class, 'id_movimiento_tipo');
     }
 
     public function bancoCuenta()
     {
-        return $this->belongsTo(BancoCuenta::class, 'id_banco_cuenta');
+        return $this->belongsTo(BancosCuentas::class, 'id_banco_cuenta');
     }
 
     public function persona()
     {
-        return $this->belongsTo(Persona::class, 'id_persona');
+        return $this->belongsTo(Personas::class, 'id_persona');
     }
 }

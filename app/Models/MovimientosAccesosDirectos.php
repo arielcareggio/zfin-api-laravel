@@ -9,7 +9,7 @@ class MovimientosAccesosDirectos extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id_movimiento_tipo', 'id_banco_cuenta', 'id_persona', 'name', 'monto', 'url_archivo'];
+    protected $fillable = ['id_tipo', 'id_movimiento_tipo', 'id_banco_cuenta', 'id_persona', 'name', 'monto', 'url_archivo'];
 
     protected $primaryKey = 'id';
 
@@ -21,18 +21,23 @@ class MovimientosAccesosDirectos extends Model
      * personas también se eliminarán automáticamente debido a la configuración onDelete('cascade')
      * indicada en las migraciones
      */
+    public function tipo()
+    {
+        return $this->belongsTo(Tipos::class, 'id_tipo');
+    }
+    
     public function movimientoTipo()
     {
-        return $this->belongsTo(MovimientoTipo::class, 'id_movimiento_tipo');
+        return $this->belongsTo(MovimientosTipos::class, 'id_movimiento_tipo');
     }
 
     public function bancoCuenta()
     {
-        return $this->belongsTo(BancoCuenta::class, 'id_banco_cuenta');
+        return $this->belongsTo(BancosCuentas::class, 'id_banco_cuenta');
     }
 
     public function persona()
     {
-        return $this->belongsTo(Persona::class, 'id_persona');
+        return $this->belongsTo(Personas::class, 'id_persona');
     }
 }
