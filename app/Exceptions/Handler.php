@@ -50,7 +50,7 @@ class Handler extends ExceptionHandler
         if ($exception instanceof \Exception) {
             LogController::addLog('Error general - Exception NO capturada por Try-Catch', json_encode(['Archivo' => $exception->getFile(), 'Linea' => $exception->getLine(), 'Exception'=> $exception->getMessage()]), $request, 1, 405);
             return response()->json(['error' => 'Error general'], 405);
-        } 
+        }
 
         return parent::render($request, $exception);
     }
