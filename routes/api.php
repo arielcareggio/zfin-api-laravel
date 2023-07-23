@@ -18,7 +18,6 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/users', 'App\Http\Controllers\UserController@index');
 
-
 /**
  * Todas las rutas que se encuentren dentro del siguiente grupo son las que estan protegidas que requieren autenticación.
  */
