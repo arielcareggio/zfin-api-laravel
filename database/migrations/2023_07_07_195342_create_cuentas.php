@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('cuentas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_user')->nullable();
-            $table->string('name')->limit(25);
+            $table->string('name')->limit(15);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_user')->references('id')->on('users');
