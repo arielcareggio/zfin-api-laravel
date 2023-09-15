@@ -21,11 +21,24 @@ class AuthController extends Controller
 
             $token->accessToken->expires_at = Carbon::now()->addHours(48);
             $token->accessToken->save();
+            $userId = auth()->user()->id;
+            $name = auth()->user()->name;
+            $lastName = auth()->user()->last_name;
+            $email = auth()->user()->email;
+            $id_countrie = auth()->user()->id_countrie;
+            $phone = auth()->user()->phone;
 
             return response()->json([
                 'access_token' => $token->plainTextToken,
                 'token_type' => 'Bearer',
                 'expires_at' => $token->accessToken->expires_at,
+                'data' => [
+                    'user_id' => $userId,
+                    'name' => $name,
+                    'last_name' => $lastName,
+                    'email' => $email,
+                    'phone' => $phone
+                ]
             ]);
         } else {
             return response()->json(['error' => 'Credenciales inválidas'], 401);

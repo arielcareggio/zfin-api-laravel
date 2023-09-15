@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/bancosCuentas/deleteBancoCuenta',        'App\Http\Controllers\BancosCuentasController@deleteBancoCuenta');
 
     //Tipos
-    Route::post('/tipos/getAllTipos',        'App\Http\Controllers\TiposController@getAllTipos');
+    Route::get('/tipos/getAllTipos',        'App\Http\Controllers\TiposController@getAllTipos');
 
     //Tipos Movimientos
     Route::post('/movimientosTipos/addMovimientoTipo',        'App\Http\Controllers\MovimientosTiposController@addMovimientoTipo');
