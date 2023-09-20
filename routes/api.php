@@ -61,6 +61,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/movimientos/deleteMovimiento',        'App\Http\Controllers\MovimientosController@deleteMovimiento');
 
     //Movimientos Accesos Directos
+    Route::post('/movimientosAccesosDirectos/getMovimientoAccesoDirecto',        'App\Http\Controllers\MovimientosAccesosDirectosController@getMovimientoAccesoDirecto');
     Route::post('/movimientosAccesosDirectos/addMovimientoAccesoDirecto',        'App\Http\Controllers\MovimientosAccesosDirectosController@addMovimientoAccesoDirecto');
     Route::put('/movimientosAccesosDirectos/updateMovimientoAccesoDirecto',        'App\Http\Controllers\MovimientosAccesosDirectosController@updateMovimientoAccesoDirecto');
     Route::delete('/movimientosAccesosDirectos/deleteMovimientoAccesoDirecto',        'App\Http\Controllers\MovimientosAccesosDirectosController@deleteMovimientoAccesoDirecto');

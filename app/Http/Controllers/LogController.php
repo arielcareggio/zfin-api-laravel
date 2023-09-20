@@ -12,11 +12,11 @@ class LogController extends Controller
         $ip = self::getIP();
 
         $json_entrada = json_encode(request()->all());
-        if(self::isLogin()){
+        if (self::isLogin()) {
             $json_entrada = self::ocultarPassword($json_entrada);
         }
         try {
-            Log::create([
+            $log = Log::create([
                 'ip' => $ip,
                 'id_user' => request()->user()->id ?? null,
                 'metodo' => request()->fullUrl(),
@@ -27,6 +27,7 @@ class LogController extends Controller
                 'json_salida' => $json_salida == '' ? null : $json_salida,
                 'headers' => json_encode($request->headers->all()) //$headers == null ? null : json_encode($headers)
             ]);
+            return $log->id; // Devolver el ID del registro creado
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al crear el registro'], 500);
@@ -38,7 +39,8 @@ class LogController extends Controller
     {
         try {
             return request()->getClientIp();
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         return null;
     }
 
@@ -46,10 +48,11 @@ class LogController extends Controller
     static private function isLogin()
     {
         try {
-            if(strpos(request()->fullUrl(), '/api/login')){
+            if (strpos(request()->fullUrl(), '/api/login')) {
                 return true;
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
         return false;
     }
 
@@ -68,7 +71,7 @@ class LogController extends Controller
 
             return $hiddenPasswordJson;
         } catch (\Exception $e) {
-            return 'No se pudo ocultar el campo password: '.$e->getMessage();
+            return 'No se pudo ocultar el campo password: ' . $e->getMessage();
         }
         return 'No se pudo ocultar el campo password';
     }

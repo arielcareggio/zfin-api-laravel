@@ -27,7 +27,7 @@ class BancosCuentasController extends Controller
                 'nro_cuenta' => $request->input('nro_cuenta'),
             ]);
 
-            return response()->json(['message' => 'Cuenta del banco registrada correctamente', 'bancoCuenta' => $bancoCuenta], 201);
+            return response()->json(['message' => 'Cuenta del banco registrada correctamente', 'bancoCuenta' => $bancoCuenta], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -60,7 +60,7 @@ class BancosCuentasController extends Controller
             $bancoCuenta->nro_cuenta = $request->input('nro_cuenta');
             $bancoCuenta->save();
 
-            return response()->json(['message' => 'Cuenta del banco actualizada correctamente', 'bancoCuenta' => $bancoCuenta], 201);
+            return response()->json(['message' => 'Cuenta del banco actualizada correctamente', 'bancoCuenta' => $bancoCuenta], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -87,7 +87,7 @@ class BancosCuentasController extends Controller
     
             $bancoCuenta->delete();
 
-            return response()->json(['message' => 'Cuenta del banco eliminada correctamente'], 201);
+            return response()->json(['message' => 'Cuenta del banco eliminada correctamente'], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

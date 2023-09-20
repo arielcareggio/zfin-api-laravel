@@ -67,15 +67,19 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        $user = User::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => Hash::make($request->input('password')),
-            'last_name' => $request->input('last_name'),
-            'phone' => $request->input('phone'),
-            'id_countrie' => $request->input('id_countrie'),
-        ]);
-
-        return response()->json(['message' => 'Usuario registrado correctamente'], 201);
+        try {
+            $user = User::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'password' => Hash::make($request->input('password')),
+                'last_name' => $request->input('last_name'),
+                'phone' => $request->input('phone'),
+                'id_countrie' => $request->input('id_countrie'),
+            ]);
+    
+            return response()->json(['message' => 'Usuario registrado correctamente', 'user' => $user], 201); //201 = Created
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un error al registrar al usuario'], 500);
+        }
     }
 }

@@ -44,7 +44,7 @@ class MovimientosController extends Controller
 
             MovimientosMasUtilizadosController::categoriaMasUtilizada($movimiento);
 
-            return response()->json(['message' => 'Movimiento registrado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 201);
+            return response()->json(['message' => 'Movimiento registrado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -109,7 +109,7 @@ class MovimientosController extends Controller
                 }
             }
 
-            return response()->json(['message' => 'Movimiento actualizado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 201);
+            return response()->json(['message' => 'Movimiento actualizado correctamente', 'movimiento' => $movimiento, 'totales' => $totales], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -136,7 +136,7 @@ class MovimientosController extends Controller
     
             $movimiento->delete();
 
-            return response()->json(['message' => 'Movimiento eliminado correctamente'], 201);
+            return response()->json(['message' => 'Movimiento eliminado correctamente'], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

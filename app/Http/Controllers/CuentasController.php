@@ -26,7 +26,7 @@ class CuentasController extends Controller
                 'id_user' => $request->input('id_user'),
             ]);
 
-            return response()->json(['message' => 'Cuenta registrada correctamente', 'cuenta' => $cuenta], 201);
+            return response()->json(['message' => 'Cuenta registrada correctamente', 'cuenta' => $cuenta], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -55,7 +55,7 @@ class CuentasController extends Controller
             $cuenta->name = $request->input('name');
             $cuenta->save();
 
-            return response()->json(['message' => 'Cuenta actualizada correctamente', 'cuenta' => $cuenta], 201);
+            return response()->json(['message' => 'Cuenta actualizada correctamente', 'cuenta' => $cuenta], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -82,7 +82,7 @@ class CuentasController extends Controller
     
             $cuenta->delete();
 
-            return response()->json(['message' => 'Cuenta eliminada correctamente'], 201);
+            return response()->json(['message' => 'Cuenta eliminada correctamente'], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

@@ -8,6 +8,63 @@ use Illuminate\Support\Facades\Validator;
 
 class MovimientosAccesosDirectosController extends Controller
 {
+    public function getMovimientoAccesoDirecto(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_user' => 'required|integer', //obligatorio
+            'id_tipo' => 'nullable|string', //opcional
+            'id_movimiento_tipo' => 'nullable|string', //opcional
+            'id_banco_cuenta' => 'nullable|string', //opcional
+            'id_persona' => 'nullable|string', //opcional
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        try {
+
+            $query = MovimientosAccesosDirectos::from('movimientos_accesos_directos as ma')
+                        ->select(
+                            'ma.id', 
+                            'ma.id_tipo', 
+                            'ma.id_movimiento_tipo', 
+                            'ma.id_banco_cuenta', 
+                            'ma.id_persona', 
+                            'ma.name', 
+                            'ma.monto',
+                            'ma.url_archivo'
+                        )
+                        ->join('personas as p', 'p.id', '=', 'ma.id_persona')
+                        ->join('cuentas as c', 'c.id', '=', 'p.id_cuenta')
+                        ->where('c.id_user', $request->input('id_user'));
+
+                        if ($request->input('id_tipo') !== null) {
+                            $query->where('ma.id_tipo', $request->input('id_tipo'));
+                        }
+
+                        if ($request->input('id_movimiento_tipo') !== null) {
+                            $query->where('ma.id_movimiento_tipo', $request->input('id_movimiento_tipo'));
+                        }
+
+                        if ($request->input('id_banco_cuenta') !== null) {
+                            $query->where('ma.id_banco_cuenta', $request->input('id_banco_cuenta'));
+                        }
+
+                        if ($request->input('id_persona') !== null) {
+                            $query->where('ma.id_persona', $request->input('id_persona'));
+                        }
+
+           $accesosDirectos = $query->get();
+
+            return response()->json($accesosDirectos, 200);
+
+        } catch (\Exception $e) {
+            // Ocurrió un error al crear el registro
+            return response()->json(['error' => 'Error al crear el registro'], 500);
+        }
+    }
+
     public function addMovimientoAccesoDirecto(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -35,7 +92,7 @@ class MovimientosAccesosDirectosController extends Controller
                 'url_archivo' => $request->input('url_archivo'),
             ]);
 
-            return response()->json(['message' => 'Acceso Directo registrado correctamente', 'accesoDirecto' => $accesoDirecto], 201);
+            return response()->json(['message' => 'Acceso Directo registrado correctamente', 'accesoDirecto' => $accesoDirecto], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -76,7 +133,7 @@ class MovimientosAccesosDirectosController extends Controller
             $accesoDirecto->url_archivo = $request->input('url_archivo');
             $accesoDirecto->save();
 
-            return response()->json(['message' => 'Acceso Directo actualizado correctamente', 'accesoDirecto' => $accesoDirecto], 201);
+            return response()->json(['message' => 'Acceso Directo actualizado correctamente', 'accesoDirecto' => $accesoDirecto], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -103,7 +160,7 @@ class MovimientosAccesosDirectosController extends Controller
     
             $accesoDirecto->delete();
 
-            return response()->json(['message' => 'Acceso Directo eliminado correctamente'], 201);
+            return response()->json(['message' => 'Acceso Directo eliminado correctamente'], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro

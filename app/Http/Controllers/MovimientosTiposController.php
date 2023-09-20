@@ -27,7 +27,7 @@ class MovimientosTiposController extends Controller
                 'id_tipo' => $request->input('id_tipo'),
             ]);
 
-            return response()->json(['message' => 'Tipo Movimiento registrado correctamente', 'movimientoTipo' => $movimientoTipo], 201);
+            return response()->json(['message' => 'Tipo Movimiento registrado correctamente', 'movimientoTipo' => $movimientoTipo], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -60,7 +60,7 @@ class MovimientosTiposController extends Controller
             $movimientoTipo->id_cuenta = $request->input('id_cuenta');
             $movimientoTipo->save();
 
-            return response()->json(['message' => 'Tipo Movimiento actualizado correctamente', 'movimientoTipo' => $movimientoTipo], 201);
+            return response()->json(['message' => 'Tipo Movimiento actualizado correctamente', 'movimientoTipo' => $movimientoTipo], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
@@ -87,7 +87,7 @@ class MovimientosTiposController extends Controller
     
             $movimientoTipo->delete();
 
-            return response()->json(['message' => 'Tipo Movimiento eliminado correctamente'], 201);
+            return response()->json(['message' => 'Tipo Movimiento eliminado correctamente'], 200);
 
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
