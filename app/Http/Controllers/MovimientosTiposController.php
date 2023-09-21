@@ -8,6 +8,21 @@ use Illuminate\Support\Facades\Validator;
 
 class MovimientosTiposController extends Controller
 {
+    public function getMovimientosTipos(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string',
+            'id_cuenta' => 'nullable|integer',
+            'id_tipo' => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return MovimientosTipos::getMovimientosTipos($request);
+    }
+
     public function addMovimientoTipo(Request $request)
     {
         $validator = Validator::make($request->all(), [

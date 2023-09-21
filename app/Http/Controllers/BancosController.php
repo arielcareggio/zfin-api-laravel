@@ -8,6 +8,22 @@ use Illuminate\Support\Facades\Validator;
 
 class BancosController extends Controller
 {
+    public function getBancos(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_banco' => 'nullable|string',
+            'name' => 'nullable|string',
+            'id_cuenta' => 'nullable|integer',
+            'id_countrie' => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return Bancos::getBancos($request);
+    }
+
     public function addBanco(Request $request)
     {
         $validator = Validator::make($request->all(), [

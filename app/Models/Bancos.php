@@ -19,6 +19,36 @@ class Bancos extends Model
         'eliminado' => 'boolean',
     ]; */
 
+    static public function getBancos($request){
+        try {
+            $bancos = Bancos::from('bancos as b')
+                ->select('b.*')
+                ->join('cuentas as c', 'c.id', '=', 'b.id_cuenta')
+                ->where('c.id_user', request()->user()->id)
+                //when: agrega una condición a la consulta solo si se cumple, si se cumple entonces ejecuta la función
+                ->when($request->input('name'), function ($query, $name) {
+                    return $query->where('b.name', 'like', '%' . $name . '%');
+                })
+                ->when($request->input('id_banco'), function ($query, $id_banco) {
+                    return $query->where('b.id', $id_banco);
+                })
+                ->when($request->input('id_cuenta'), function ($query, $id_cuenta) {
+                    return $query->where('b.id_cuenta', $id_cuenta);
+                })
+                ->when($request->input('id_countrie'), function ($query, $id_countrie) {
+                    return $query->where('b.id_countrie', $id_countrie);
+                })
+
+                ->orderBy('b.name')
+                ->get();
+
+            return response()->json($bancos, 200);
+
+        } catch (\Exception $e) {
+            // Ocurrió un error al crear el registro
+            return response()->json(['error' => 'Error al obtener los Bancos'], 500);
+        }
+    }
     /**
      * Para la eliminación en cascada.
      * Cuando se elimine un registro en la tabla cuentas, los registros relacionados en la tabla

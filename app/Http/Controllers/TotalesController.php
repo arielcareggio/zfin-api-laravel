@@ -11,6 +11,23 @@ use Illuminate\Support\Facades\DB;
 class TotalesController extends Controller
 {
 
+    public function getTotales(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_cuenta' => 'nullable|integer', // Para que ni bien se inicia la web obtener todos los movimientos de una cuenta (Cuenta = Personal, AgroRural, etc)
+            'id_banco_cuenta' => 'nullable|integer',
+            'name_cuenta' => 'nullable|string',
+            'name_banco_cuenta' => 'nullable|string',
+            'total_desde' => 'nullable|numeric|regex:/^-?\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
+            'total_hasta' => 'nullable|numeric|regex:/^-?\d+(\.\d{1,2})?$/', //aceptará valores numéricos con un máximo de dos decimales.
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return Totales::getTotales($request);
+    }
     // SI AGREGA UN MOVIMIENTO, SOLO CALCULAR CON EL MONTO AGREGADO
 
     /**
@@ -21,15 +38,15 @@ class TotalesController extends Controller
         $id_persona                 = $param['id_persona'];
         $id_banco_cuenta            = $param['id_banco_cuenta'];
         $id_banco_cuenta_anterior   = $param['id_banco_cuenta_anterior'] ?? null;
-        
+
         $total = [];
         try {
             $persona = Personas::find($id_persona);
 
             $total['banco_cuenta'] = ['id_banco_cuenta' => $id_banco_cuenta, 'total' => self::setMonto($id_banco_cuenta, $persona->id_cuenta, true)];
 
-            if($id_banco_cuenta_anterior != null){
-                $total['banco_cuenta_anterior'] = ['id_banco_cuenta_anterior' => $id_banco_cuenta_anterior, 'total' => self::setMonto($id_banco_cuenta_anterior, $persona->id_cuenta, true)]; 
+            if ($id_banco_cuenta_anterior != null) {
+                $total['banco_cuenta_anterior'] = ['id_banco_cuenta_anterior' => $id_banco_cuenta_anterior, 'total' => self::setMonto($id_banco_cuenta_anterior, $persona->id_cuenta, true)];
             }
             return $total;
         } catch (\Exception $e) {
@@ -55,7 +72,6 @@ class TotalesController extends Controller
             $total['banco_cuenta'] = ['id_banco_cuenta' => $id_banco_cuenta, 'total' => self::setMonto($id_banco_cuenta, $persona->id_cuenta, false, $monto)];
 
             return $total;
-
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al actualizar el total'], 500);
@@ -68,17 +84,17 @@ class TotalesController extends Controller
     private static function setMonto($id_banco_cuenta, $id_cuenta, $barridoCompleto, $monto = null)
     {
         $totales = Totales::where('id_cuenta', $id_cuenta)
-                                ->where('id_banco_cuenta', $id_banco_cuenta)
-                                ->first();
+            ->where('id_banco_cuenta', $id_banco_cuenta)
+            ->first();
 
-        if($barridoCompleto || !$totales){
+        if ($barridoCompleto || !$totales) {
             $total = self::getMontoBarridoTotal($id_banco_cuenta);
-        }else{
+        } else {
             $total = self::getMontoParcialTotal($totales, $monto);
         }
 
         if (!$totales) {
-            $totales = new Totales();// No existe el calculo, crear una nueva instancia del modelo Totales
+            $totales = new Totales(); // No existe el calculo, crear una nueva instancia del modelo Totales
         }
 
         $totales->id_cuenta = $id_cuenta;
@@ -96,10 +112,10 @@ class TotalesController extends Controller
     {
         //Obtener todos los movimientos que coincidan con el id_banco_cuenta
         $result = DB::table('movimientos')
-        ->select(DB::raw('SUM(monto) as total'))
-        ->where('id_banco_cuenta', $id_banco_cuenta)
-        ->first();
-    
+            ->select(DB::raw('SUM(monto) as total'))
+            ->where('id_banco_cuenta', $id_banco_cuenta)
+            ->first();
+
         return $result->total ?? 0;
     }
 

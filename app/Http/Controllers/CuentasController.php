@@ -9,6 +9,19 @@ use Illuminate\Support\Facades\Validator;
 class CuentasController extends Controller
 {
 
+    public function getCuenta(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return Cuentas::getCuentas($request);
+    }
+
     public function addCuenta(Request $request)
     {
         $validator = Validator::make($request->all(), [

@@ -8,6 +8,21 @@ use Illuminate\Support\Facades\Validator;
 
 class PersonasController extends Controller
 {
+    public function getPersonas(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable|string',
+            'id_cuenta' => 'nullable|integer',
+            'id_persona' => 'nullable|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return Personas::getPersonas($request);
+    }
+
     public function addPersona(Request $request)
     {
         $validator = Validator::make($request->all(), [

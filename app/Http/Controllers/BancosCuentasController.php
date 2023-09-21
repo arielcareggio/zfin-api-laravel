@@ -8,6 +8,22 @@ use Illuminate\Support\Facades\Validator;
 
 class BancosCuentasController extends Controller
 {
+    public function getBancosCuentas(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'id_banco_cuenta' => 'nullable|string',
+            'name' => 'nullable|string',
+            'id_banco' => 'nullable|integer',
+            'nro_cuenta' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        return BancosCuentas::getBancosCuentas($request);
+    }
+
     public function addBancoCuenta(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -28,7 +44,6 @@ class BancosCuentasController extends Controller
             ]);
 
             return response()->json(['message' => 'Cuenta del banco registrada correctamente', 'bancoCuenta' => $bancoCuenta], 200);
-
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al crear el registro'], 500);
@@ -61,7 +76,6 @@ class BancosCuentasController extends Controller
             $bancoCuenta->save();
 
             return response()->json(['message' => 'Cuenta del banco actualizada correctamente', 'bancoCuenta' => $bancoCuenta], 200);
-
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al actualizar el registro'], 500);
@@ -73,22 +87,21 @@ class BancosCuentasController extends Controller
         $validator = Validator::make($request->all(), [
             'id_banco_cuenta' => 'required|integer',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
-    
+
         try {
             $bancoCuenta = BancosCuentas::find($request->input('id_banco_cuenta'));
-    
+
             if (!$bancoCuenta) {
                 return response()->json(['error' => 'La Cuenta del banco no fue encontrada'], 404);
             }
-    
+
             $bancoCuenta->delete();
 
             return response()->json(['message' => 'Cuenta del banco eliminada correctamente'], 200);
-
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al eliminar el registro'], 500);
