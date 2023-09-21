@@ -15,10 +15,14 @@ class BancosCuentas extends Model
 
     protected $table = 'bancos_cuentas';
 
-    static public function getBancosCuentas($request){
+    static public function getBancosCuentas($request)
+    {
         try {
             $bancoCuenta = BancosCuentas::from('bancos_cuentas as bc')
-                ->select('bc.*')
+                ->select(
+                    'bc.*',
+                    'b.name as name_banco'
+                )
                 ->join('bancos as b', 'b.id', '=', 'bc.id_banco')
                 ->join('cuentas as c', 'c.id', '=', 'b.id_cuenta')
                 ->where('c.id_user', request()->user()->id)

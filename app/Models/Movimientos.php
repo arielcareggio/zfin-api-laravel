@@ -18,13 +18,22 @@ class Movimientos extends Model
     /**
      * Retorna los movimientos
      */
-    static public function getMovimientos($request){
+    static public function getMovimientos($request)
+    {
         try {
             $query = Movimientos::from('movimientos as m')
-                ->select('m.*')
+                ->select(
+                    'm.*',
+                    'mt.name as name_movimiento_tipo',
+                    'bc.name as name_banco_cuenta',
+                    'b.name as name_banco',
+                    'p.name as name_persona'
+                )
                 ->join('bancos_cuentas as bc', 'bc.id', '=', 'm.id_banco_cuenta')
                 ->join('bancos as b', 'b.id', '=', 'bc.id_banco')
                 ->join('cuentas as c', 'c.id', '=', 'b.id_cuenta')
+                ->join('movimientos_tipos as mt', 'mt.id', '=', 'm.id_movimiento_tipo')
+                ->join('personas as p', 'p.id', '=', 'm.id_persona')
                 ->where('c.id_user', request()->user()->id)
                 ->where('c.id', $request->input('id_cuenta'))
                 //when: agrega una condición a la consulta solo si se cumple, si se cumple entonces ejecuta la función
@@ -39,7 +48,7 @@ class Movimientos extends Model
                 })
                 ->when($request->input('id_tipo'), function ($query, $id_tipo) {
                     return $query->join('movimientos_tipos as mt', 'mt.id', '=', 'm.id_movimiento_tipo')
-                                ->where('mt.id_tipo', $id_tipo);
+                        ->where('mt.id_tipo', $id_tipo);
                 })
                 ->when($request->input('fecha_desde'), function ($query, $fecha_desde) {
                     return $query->where('m.fecha', '>=', $fecha_desde);

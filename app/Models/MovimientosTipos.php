@@ -19,7 +19,10 @@ class MovimientosTipos extends Model
     {
         try {
             $cuentas = MovimientosTipos::from('movimientos_tipos as m')
-                ->select('m.*')
+                ->select(
+                    'm.*',
+                    'c.name as name_cuenta'
+                )
                 ->join('cuentas as c', 'c.id', '=', 'm.id_cuenta')
                 ->where('c.id_user', request()->user()->id)
                 ->orWhere('m.id_cuenta', 1) // id_cuenta = 1: Cuenta por defecto

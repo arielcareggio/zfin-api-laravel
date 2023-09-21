@@ -19,11 +19,17 @@ class Bancos extends Model
         'eliminado' => 'boolean',
     ]; */
 
-    static public function getBancos($request){
+    static public function getBancos($request)
+    {
         try {
             $bancos = Bancos::from('bancos as b')
-                ->select('b.*')
+                ->select(
+                    'b.*',
+                    'c.name as name_cuenta',
+                    'co.name as name_countrie'
+                )
                 ->join('cuentas as c', 'c.id', '=', 'b.id_cuenta')
+                ->join('countries as co', 'co.id', '=', 'b.id_countrie')
                 ->where('c.id_user', request()->user()->id)
                 //when: agrega una condición a la consulta solo si se cumple, si se cumple entonces ejecuta la función
                 ->when($request->input('name'), function ($query, $name) {
@@ -43,7 +49,6 @@ class Bancos extends Model
                 ->get();
 
             return response()->json($bancos, 200);
-
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al obtener los Bancos'], 500);

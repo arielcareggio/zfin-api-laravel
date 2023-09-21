@@ -19,7 +19,10 @@ class Personas extends Model
     {
         try {
             $persona = Personas::from('personas as p')
-                ->select('p.*')
+                ->select(
+                    'p.*',
+                    'c.name as name_cuenta'
+                )
                 ->join('cuentas as c', 'c.id', '=', 'p.id_cuenta')
                 ->where('c.id_user', request()->user()->id)
                 //when: agrega una condición a la consulta solo si se cumple, si se cumple entonces ejecuta la función
