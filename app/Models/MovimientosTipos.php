@@ -36,8 +36,8 @@ class MovimientosTipos extends Model
                 ->when($request->input('id_tipo'), function ($query, $id_tipo) {
                     return $query->where('m.id_tipo', $id_tipo);
                 })
-                ->orderBy('m.name')
                 ->orderBy('m.id_tipo')
+                ->orderBy('m.name')
                 ->get();
 
             return response()->json($cuentas, 200);
