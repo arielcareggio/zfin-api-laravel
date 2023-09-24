@@ -66,7 +66,10 @@ class Movimientos extends Model
                     return $query->where('bc.id_banco', $id_banco);
                 });
 
-            $movimientos = $query->orderByDesc('m.id')->get();
+            $movimientos = $query
+                ->orderByDesc('m.fecha')
+                ->orderByDesc('m.id')
+                ->get();
 
             return response()->json($movimientos, 200);
         } catch (\Exception $e) {
