@@ -36,7 +36,8 @@ class MovimientosAccesosDirectos extends Model
                 ->when($request->input('id_persona'), function ($query, $id_persona) {
                     return $query->where('ma.id_persona', $id_persona);
                 })
-                ->orderByDesc('ma.id')
+                ->orderBy('ma.id_tipo')
+                ->orderBy('ma.name')
                 ->get();
 
             return response()->json($accesosDirectos, 200);
