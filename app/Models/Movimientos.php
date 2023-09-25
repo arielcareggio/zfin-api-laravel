@@ -35,8 +35,15 @@ class Movimientos extends Model
                 ->join('movimientos_tipos as mt', 'mt.id', '=', 'm.id_movimiento_tipo')
                 ->join('personas as p', 'p.id', '=', 'm.id_persona')
                 ->where('c.id_user', request()->user()->id)
-                ->where('c.id', $request->input('id_cuenta'))
+
                 //when: agrega una condición a la consulta solo si se cumple, si se cumple entonces ejecuta la función
+                ->when($request->input('id_cuenta'), function ($query, $id_cuenta) {
+                    return $query->where('c.id', $id_cuenta);
+                }, function ($query) { //Se agrega un ELSE
+                    //ELSE
+                    return $query->where('c.por_defecto', 1);
+                })
+                
                 ->when($request->input('id_movimiento_tipo'), function ($query, $id_movimiento_tipo) {
                     return $query->where('ma.id_movimiento_tipo', $id_movimiento_tipo);
                 })

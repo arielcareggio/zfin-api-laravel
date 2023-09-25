@@ -12,7 +12,7 @@ class MovimientosController extends Controller
     {
         //->where('c.id_user', request()->user()->id);
         $validator = Validator::make($request->all(), [
-            'id_cuenta' => 'required|integer', // Para que ni bien se inicia la web obtener todos los movimientos de una cuenta (Cuenta = Personal, AgroRural, etc)
+            'id_cuenta' => 'nullable|integer', // Para que ni bien se inicia la web obtener todos los movimientos de una cuenta (Cuenta = Personal, AgroRural, etc)
             'id_banco_cuenta' => 'nullable|integer',
             'id_persona' => 'nullable|integer',
             'id_movimiento_tipo' => 'nullable|integer', //Luz / Agua, etc

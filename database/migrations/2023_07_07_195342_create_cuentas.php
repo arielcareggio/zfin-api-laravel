@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('id_user')->nullable();
             $table->string('name')->limit(15);
+            $table->tinyInteger('por_defecto')->default(0);
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_user')->references('id')->on('users');
@@ -24,6 +25,7 @@ return new class extends Migration
         DB::table('cuentas')->insert([
             'id' => 1,
             'name' => 'Defecto',
+            'por_defecto' => 1,
         ]);
     }
 
