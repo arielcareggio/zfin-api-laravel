@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->float('monto');
             $table->text('url_archivo')->nullable(); //Por defecto null
+            $table->text('comentario')->nullable(); //Por defecto null
             $table->timestamps(); //Crea created_at y updated_at
             
             $table->foreign('id_movimiento_tipo')->references('id')->on('movimientos_tipos')->onDelete('cascade');
