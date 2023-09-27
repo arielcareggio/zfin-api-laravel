@@ -149,9 +149,9 @@ class MovimientosController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
-$id= $request->input('id_movimiento');
+
         try {
-            $movimiento = Movimientos::find($request->input('id_movimiento')+50);
+            $movimiento = Movimientos::find($request->input('id_movimiento'));
 
             if (!$movimiento) {
                 return response()->json(['error' => 'El Movimiento no fue encontrado'], 200);
@@ -164,9 +164,9 @@ $id= $request->input('id_movimiento');
             $param['id_banco_cuenta']       = $movimiento->id_banco_cuenta;
             $param['id_persona']            = $movimiento->id_persona;
             
-            $totales = TotalesController::recalcularTotal($param);
+           // $totales = TotalesController::recalcularTotal($param);
             
-            return response()->json(['message' => 'Movimiento eliminado correctamente', 'totales' => $totales], 200);
+            return response()->json(['message' => 'Movimiento eliminado correctamente'], 200);
         } catch (\Exception $e) {
             // Ocurrió un error al crear el registro
             return response()->json(['error' => 'Error al eliminar el registro'], 500);
