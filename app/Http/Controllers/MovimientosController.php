@@ -152,12 +152,12 @@ class MovimientosController extends Controller
 
         try {
             $movimiento = Movimientos::find($request->input('id_movimiento'));
-
+            return response()->json(['error' => 'El Movimiento no fue encontrado'], 200);
             if (!$movimiento) {
                 return response()->json(['error' => 'El Movimiento no fue encontrado'], 200);
             }
 
-            $movimiento->delete();
+            //$movimiento->delete();
 
             //Recalculamos
             $param['id_movimiento_tipo']    = $movimiento->id_movimiento_tipo;

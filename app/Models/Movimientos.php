@@ -20,6 +20,7 @@ class Movimientos extends Model
      */
     static public function getMovimientos($request)
     {
+        $perPage = $request->input('per_page',10); // Número de elementos por página
         try {
             $query = Movimientos::from('movimientos as m')
                 ->select(
@@ -76,7 +77,7 @@ class Movimientos extends Model
             $movimientos = $query
                 ->orderByDesc('m.fecha')
                 ->orderByDesc('m.id')
-                ->get();
+                ->paginate($perPage); // Aplicar la paginación
 
             return response()->json($movimientos, 200);
         } catch (\Exception $e) {
